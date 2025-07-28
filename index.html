@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Agriculture Monitoring</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>RE:BION Monitoring</h1>
+            <p>Solusi AI IoT untuk Pertanian Pintar</p>
+        </div>
+
+        <!-- Top Controls -->
+        <div class="top-controls">
+            <div class="city-selector">
+                <label for="citySelect">Kota:</label>
+                <select id="citySelect" onchange="changeCity()">
+                    <option value="Jakarta">Jakarta</option>
+                    <option value="Surabaya">Sumbawa</option>
+                    <option value="Bandung">Bekasi</option>
+                </select>
+            </div>
+            <a href="..\kendali\index.html" class="control-btn">
+                <span>⚙️</span>
+                Menu Kendali
+            </a>
+            <button class="refresh-btn" onclick="refreshAllData()">
+                <span>🔄</span>
+                Refresh Data
+            </button>
+        </div>
+
+        <!-- MQTT Status -->
+        <div class="mqtt-status">
+            <span id="mqttStatusIcon">🔴</span>
+            <span id="mqttStatusText" class="mqtt-disconnected">MQTT Disconnected</span>
+        </div>
+
+        <!-- AI Section -->
+        <div class="ai-section">
+            <div class="ai-title">
+                <span>🤖</span>
+                Smart AI Assistant
+            </div>
+            <div class="ai-subtitle">
+                Asisten AI untuk analisis dan rekomendasi pertanian cerdas
+            </div>
+            
+            <div class="ai-features">
+                <div class="ai-feature">
+                    <div class="ai-feature-icon">🌱</div>
+                    <div class="ai-feature-title">Rekomendasi Tanam</div>
+                    <div class="ai-feature-desc">Saran tanaman sesuai kondisi lingkungan</div>
+                </div>
+                <div class="ai-feature">
+                    <div class="ai-feature-icon">💧</div>
+                    <div class="ai-feature-title">Jadwal Penyiraman</div>
+                    <div class="ai-feature-desc">Optimasi jadwal penyiraman otomatis</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Weather Section -->
+        <div class="weather-section">
+            <div class="weather-title">🌤️ Kondisi Cuaca</div>
+            
+            <div id="weatherLoading" class="loading">Memuat data cuaca...</div>
+            <div id="weatherError" style="display: none;"></div>
+            <div id="weatherInfo" class="weather-grid" style="display: none;">
+                <div class="weather-item">
+                    <div class="weather-icon" id="weatherIcon">🌤️</div>
+                    <div class="weather-value" id="temperature">--°C</div>
+                    <div class="weather-label" id="weatherDesc">--</div>
+                </div>
+                <div class="weather-item">
+                    <div class="weather-icon">💧</div>
+                    <div class="weather-value" id="airHumidity">--%</div>
+                    <div class="weather-label">Kelembaban Udara</div>
+                </div>
+                <div class="weather-item">
+                    <div class="weather-icon">🌬️</div>
+                    <div class="weather-value" id="windSpeed">-- km/h</div>
+                    <div class="weather-label">Kecepatan Angin</div>
+                </div>
+                <div class="weather-item">
+                    <div class="weather-icon">📊</div>
+                    <div class="weather-value" id="pressure">-- hPa</div>
+                    <div class="weather-label">Tekanan</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sensors Section -->
+        <div class="sensors-section">
+            <div class="sensor-card">
+                <div class="sensor-header">
+                    <div class="sensor-title">Sensor Kelembaban Tanah</div>
+                    <div class="sensor-status">
+                        <div class="status-dot" id="sensorStatusDot"></div>
+                        <span id="sensorStatusText">Offline</span>
+                    </div>
+                </div>
+                <div class="sensor-value-container">
+                    <div>
+                        <span class="sensor-value" id="sensorValue">--</span>
+                        <span class="sensor-unit">%</span>
+                    </div>
+                    <div style="font-size: 0.85rem; color: #5a7c47;" id="sensorTime">--:--:--</div>
+                </div>
+                <div class="soil-condition">
+                    <div class="condition-icon" id="conditionIcon">🌱</div>
+                    <div class="condition-text" id="conditionText">Menunggu Data...</div>
+                </div>
+                <div class="humidity-bar">
+                    <div class="humidity-fill" id="sensorBar" style="width: 0%;"></div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="soilChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <div class="last-update">
+            <p>Terakhir diupdate: <span id="lastUpdateTime">--</span></p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
